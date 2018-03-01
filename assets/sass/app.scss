@@ -13,13 +13,33 @@ body {
 .tooltip {
   position: absolute;
   text-align: center;
-  width: 60px;
-  height: 28px;
+  // width: 300px;
+  // height: 250px;
+  // overflow: scroll;
+  // pointer-events: none;
   padding: 2px;
   background: lightsteelblue;
   border: 0;
   border-radius: 8px;
-  pointer-events: none;
+}
+
+
+.tooltip:after{
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.tooltip:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-top-color: #88b7d5;
+	border-width: 20px;
+	margin-left: -20px;
 }
 
 #table {

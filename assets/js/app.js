@@ -1,56 +1,17 @@
-var header = ['Sect0rs', 'A1', 'A2', 'A3', 'A4', 'A5'],
-  vertical_header = [
-    [{
-        'Text': 'Header',
-        'Legend': 'AAA'
-      },
-      {
-        2: ['link', 'link', 'Color'],
-        3: ['link', 'link', 'link']
-      }, {
-        1: ['link', 'link', 'link'],
-        2: ['link', 'link', 'link']
-      }, {
-        5: ['link', 'link', 'link'],
-        6: ['link', 'link', 'link'],
-        7: ['link', 'link', 'link']
-      }, {
-        5: ['link', 'link', 'link'],
-        6: ['link', 'link', 'link'],
-        7: ['link', 'link', 'link']
-      }, {
-        5: ['link', 'link', 'link'],
-        6: ['link', 'link', 'link'],
-        7: ['link', 'link', 'link']
-      }
-    ],
-    [{
-        'Text': 'Header',
-        'Legend': 'AAA'
-      },
-      {
-        2: ['link', 'link', 'Color'],
-        3: ['link', 'link', 'link']
-      }, {
-        1: ['link', 'link', 'link'],
-        2: ['link', 'link', 'link']
-      }, {
-        5: ['link', 'link', 'link'],
-        6: ['link', 'link', 'link'],
-        7: ['link', 'link', 'link']
-      }, {
-        5: ['link', 'link', 'link'],
-        6: ['link', 'link', 'link'],
-        7: ['link', 'link', 'link']
-      }, {
-        5: ['link', 'link', 'link'],
-        6: ['link', 'link', 'link'],
-        7: ['link', 'link', 'link']
-      }
-    ]
-  ];
+var defaultTooltipPosition = {
+  "opacity": 0,
+  'top': "-10px"
+};
 
 $(function() {
+  d3.select("body").on("click", function() {
+    var tooltip = d3.select('.tooltip'),
+      tooltipActive = tooltip.classed('tooltip-active');
+    if (tooltipActive) {
+      tooltip.styles(defaultTooltipPosition);
+    }
+  });
+
   function prepareDATA() {
     d3.csv("link.csv", function(links) {
       var legends = $.map(links, function(d, i) {
@@ -108,8 +69,8 @@ $(function() {
 
   function createSVG(data) {
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    var cx = 15,
-      cy = 15;
+    var cx = 20,
+      cy = 20;
     d3Svg = d3.select(svg).attrs({
       height: 100,
       width: 100
@@ -123,31 +84,44 @@ $(function() {
           .datum(data[k])
           .append('circle')
           .attrs(function(d, i) {
-            console.log(d[0], i)
+            console.log(d.length, i);
+            var r = (d.length * 100) / 25;
             return {
               cx: cx,
               cy: cy,
-              r: 10,
-              'stroke-width': 3,
+              r: r,
               fill: d[0]["Attributes"].fill
             };
-          }).on("mouseover", function(d) {
-            console.log(d, d3.event.pageX);
+          }).on("mouseenter", function(d) {
+            var temp = d.slice(1, d.length);
+            var h = $.map(temp, function(d, i) {
+              var href = d[2],
+                t = d[1],
+                h = "<a href='" + href + "'>" + t + "</a><br />";
+              return h;
+            });
+            //console.log(html);
             var div = d3.select('.tooltip');
-            div.transition()
-              .duration(200)
+            div
+              .transition()
+              .duration(100)
               .style("opacity", .9);
-            div //.html(formatTime(d.date) + "<br/>" + d.close)
-              .style("left", (d3.event.pageX) + "px")
-              .style("top", (d3.event.pageY - 28) + "px");
-          }).on("mouseout", function(d) {
-            var div = d3.select('.tooltip');
-            div.transition()
-              .transition(200)
-              .style("opacity", 0);
-          });
+            console.log(div.node().getBoundingClientRect());
+            div.html(h.join())
+              .styles({
+                "left": (d3.event.pageX - ((div.node().getBoundingClientRect().width)/2)) + "px",
+                "top": (d3.event.pageY - div.node().getBoundingClientRect().height - 30) + "px"
+              });
+            console.log(div.node().getBoundingClientRect().height);
+            div.classed("tooltip-active", true);
+            div.on("mouseenter", function(d) {}).on("mouseleave", function(d) {
+              console.log("tooltip mouseout");
+              div.styles(defaultTooltipPosition);
+            })
+          })
+          .on("mouseleave", function(d) {});
         cx = cx + 30;
-        cy = cy;
+        cy = cy + 30;
       }
     }
     return svg;
