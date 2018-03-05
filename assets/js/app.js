@@ -34,13 +34,15 @@ $(function() {
               'Low Quality': [{
                 'Attributes': {
                   'fill': 'rgba(200, 55, 55, 0.5)',
-                  'stroke': 'rgb(200, 55, 55)'
+                  'stroke': 'rgb(200, 55, 55)',
+                  'header': ''
                 }
               }],
               'High Quality': [{
                 'Attributes': {
                   'fill': 'rgba(143, 177, 0, 0.5)',
-                  'stroke': 'rgb(143, 177, 0)'
+                  'stroke': 'rgb(143, 177, 0)',
+                  'header': ''
                 }
               }]
             };
@@ -54,9 +56,16 @@ $(function() {
                   if (obj["Sl no"] == el) {
                     o[quality].push([obj["Sl no"], obj["Title"], obj["Link"], obj["Study Design"], obj["Quality of the Study"]]);
                   }
+                  if (o[quality][0]["Attributes"]["header"] == "") {
+                    o[quality][0]["Attributes"]["header"] = obj["Study Design"];
+                  }
+                  // if(o[quality]["Attributes"]["header"] != ""){
+                  //   o[quality]["Attributes"]["header"] = obj["Study Design"];
+                  // }
                 });
               }
             });
+            // console.log(data[j]);
             temp.push(o);
           }
           rows.push(temp);
@@ -84,42 +93,98 @@ $(function() {
           .datum(data[k])
           .append('circle')
           .attrs(function(d, i) {
-            console.log(d.length, i);
             var r = (d.length * 100) / 25;
             return {
               cx: cx,
               cy: cy,
               r: r,
-              fill: d[0]["Attributes"].fill
+              fill: d[0]["Attributes"]["fill"]
             };
           }).on("mouseenter", function(d) {
             var temp = d.slice(1, d.length);
             var h = $.map(temp, function(d, i) {
               var href = d[2],
                 t = d[1],
-                h = "<a href='" + href + "'>" + t + "</a><br />";
+                h = "<a target='_blank' href='" + href + "'>" + t + "</a><br />";
               return h;
             });
-            //console.log(html);
-            var div = d3.select('.tooltip');
-            div
+            var tooltip = d3.select('.tooltip'),
+              tooltipHeader = d3.select('.tooltip>.tooltip-header'),
+              tooltipBody = d3.select('.tooltip>.tooltip-body');
+            var circle = d3.select(this);
+            //set mouseenter style for circle
+            circle.attrs({
+              'stroke': circle.attr("fill"),
+              'stroke-width': "3"
+            });
+
+            tooltip
               .transition()
               .duration(100)
               .style("opacity", .9);
-            console.log(div.node().getBoundingClientRect());
-            div.html(h.join())
-              .styles({
-                "left": (d3.event.pageX - ((div.node().getBoundingClientRect().width)/2)) + "px",
-                "top": (d3.event.pageY - div.node().getBoundingClientRect().height - 30) + "px"
+            tooltipHeader.append(function() {
+              d3.select(this).selectAll('*').remove();
+              var span = document.createElement("span");
+              var d_span = d3.select(span);
+              d_span
+                .styles({
+                  "height": "50px",
+                  "width": "50px",
+                  "background-color": d[0]["Attributes"]["fill"],
+                  "display":"inline-block",
+                  "position":"absolute",
+                  "left":"5px",
+                  //"right":"10px",
+                  "top":"10px"
+                });
+              return span;
+            });
+//             content: "";
+// height: 50px;
+// width: 50px;
+// background-color: black;
+// display: inline-block;
+// margin: 10px;
+// position: relative;
+// top: -2px;
+// left: 30px;
+// position: absolute;
+            tooltipHeader.append(function() {
+              var h3 = document.createElement("h3");
+              var d_h3 = d3.select(h3);
+              d_h3.text(d[0]["Attributes"]["header"]);
+              d_h3.styles({
+                'color': d[0]["Attributes"]["fill"]
               });
-            console.log(div.node().getBoundingClientRect().height);
-            div.classed("tooltip-active", true);
-            div.on("mouseenter", function(d) {}).on("mouseleave", function(d) {
-              console.log("tooltip mouseout");
-              div.styles(defaultTooltipPosition);
-            })
+              return h3;
+            });
+            tooltipBody.html(function() {
+              return h.join("");
+            });
+
+            var $offsetLeft = $(this).offset().left,
+              $offsetTop = $(this).offset().top,
+              positionCenter = (tooltip.node().getBoundingClientRect().width / 2),
+              positionTop = tooltip.node().getBoundingClientRect().height,
+              circleRadius = parseInt(circle.attr('r'));
+
+            tooltip.styles({
+              "left": ($offsetLeft - positionCenter + circleRadius) + "px",
+              "top": ($offsetTop - positionTop - 8) + "px"
+            });
+            tooltip.classed("tooltip-active", true);
+            tooltip.on("mouseenter", function(d) {}).on("mouseleave", function(d) {
+              // console.log("tooltip mouseout");
+              tooltip.styles(defaultTooltipPosition);
+            });
           })
-          .on("mouseleave", function(d) {});
+          .on("mouseleave", function(d) {
+            var circle = d3.select(this);
+            circle.attrs({
+              'stroke': "",
+              'stroke-width': "0"
+            });
+          });
         cx = cx + 30;
         cy = cy + 30;
       }
