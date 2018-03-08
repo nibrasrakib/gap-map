@@ -20,12 +20,12 @@ $(function() {
   });
 
   function prepareDATA() {
-    d3.csv("link.csv", function(links) {
+    d3.csv("link1.csv", function(links) {
       var legends = $.map(links, function(d, i) {
         return d["Quality of the Study"];
       });
       legends = $.unique(legends);
-      d3.text('gapmap.csv', function(data) {
+      d3.text('gapmap1.csv', function(data) {
         data = d3.csvParseRows(data);
         var rows = [];
         for (var j = 0; j < data.length; j++) {
@@ -38,17 +38,24 @@ $(function() {
           for (var k = 1; k < data[j].length; k++) {
             var split = data[j][k].split(",");
             var o = {
-              'Low Quality': [{
+              'Poor': [{
                 'Attributes': {
                   'fill': 'rgba(200, 55, 55, 0.5)',
                   'stroke': 'rgb(200, 55, 55)',
                   'header': ''
                 }
               }],
-              'High Quality': [{
+              'Moderate': [{
                 'Attributes': {
                   'fill': 'rgba(143, 177, 0, 0.5)',
                   'stroke': 'rgb(143, 177, 0)',
+                  'header': ''
+                }
+              }],
+              'Good': [{
+                'Attributes': {
+                  'fill': 'rgba(5, 140, 19,0.5)',
+                  'stroke': 'rgba(5, 140, 19,0)',
                   'header': ''
                 }
               }]
@@ -85,11 +92,11 @@ $(function() {
 
   function createSVG(data) {
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    var cx = 20,
-      cy = 20;
+    var cx = 25,
+      cy = 25;
     d3Svg = d3.select(svg).attrs({
-      height: 100,
-      width: 100
+      height: 150,
+      width: 150
     });
 
     for (var k in data) {
@@ -100,7 +107,7 @@ $(function() {
           .datum(data[k])
           .append('circle')
           .attrs(function(d, i) {
-            var r = (d.length * 100) / 25;
+            var r = (d.length * 100) / 50;
             return {
               cx: cx,
               cy: cy,
@@ -138,24 +145,14 @@ $(function() {
                   "height": "50px",
                   "width": "50px",
                   "background-color": d[0]["Attributes"]["fill"],
-                  "display":"inline-block",
-                  "position":"absolute",
-                  "left":"5px",
+                  "display": "inline-block",
+                  "position": "absolute",
+                  "left": "5px",
                   //"right":"10px",
-                  "top":"10px"
+                  "top": "10px"
                 });
               return span;
             });
-//             content: "";
-// height: 50px;
-// width: 50px;
-// background-color: black;
-// display: inline-block;
-// margin: 10px;
-// position: relative;
-// top: -2px;
-// left: 30px;
-// position: absolute;
             tooltipHeader.append(function() {
               var h3 = document.createElement("h3");
               var d_h3 = d3.select(h3);
