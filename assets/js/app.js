@@ -40,7 +40,7 @@ $(function() {
               }],
               'Moderate': [{
                 'Attributes': {
-                  'fill': 'rgba(143, 177, 0, 0.5)',
+                  'fill': 'rgba(241, 244, 66,1)',
                   'stroke': 'rgb(143, 177, 0)',
                   'header': ''
                 }
