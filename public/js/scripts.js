@@ -11,6 +11,34 @@ var defaultTooltipPosition = {
 };
 
 $(function() {
+  function getDefaultLegend() {
+    var defaultLegend = {
+      'Poor': [{
+        'Attributes': {
+          'fill': 'rgba(200, 55, 55, 0.5)',
+          'stroke': 'rgb(200, 55, 55)',
+          'header': ''
+        }
+      }],
+      'Moderate': [{
+        'Attributes': {
+          'fill': 'rgba(241, 244, 66,1)',
+          'stroke': 'rgb(143, 177, 0)',
+          'header': ''
+        }
+      }],
+      'Good': [{
+        'Attributes': {
+          'fill': 'rgba(5, 140, 19,0.5)',
+          'stroke': 'rgba(5, 140, 19,0)',
+          'header': ''
+        }
+      }]
+    };
+    return defaultLegend;
+  }
+
+
   d3.select("body").on("click", function() {
     var tooltip = d3.select('.tooltip'),
       tooltipActive = tooltip.classed('tooltip-active');
@@ -25,6 +53,7 @@ $(function() {
         return d["Quality of the Study"];
       });
       legends = $.unique(legends);
+      prepareLegend();
       d3.text('gapmap1.csv', function(data) {
         data = d3.csvParseRows(data);
         var rows = [];
@@ -37,29 +66,7 @@ $(function() {
           // console.log(data[j]);
           for (var k = 1; k < data[j].length; k++) {
             var split = data[j][k].split(",");
-            var o = {
-              'Poor': [{
-                'Attributes': {
-                  'fill': 'rgba(200, 55, 55, 0.5)',
-                  'stroke': 'rgb(200, 55, 55)',
-                  'header': ''
-                }
-              }],
-              'Moderate': [{
-                'Attributes': {
-                  'fill': 'rgba(241, 244, 66,1)',
-                  'stroke': 'rgb(143, 177, 0)',
-                  'header': ''
-                }
-              }],
-              'Good': [{
-                'Attributes': {
-                  'fill': 'rgba(5, 140, 19,0.5)',
-                  'stroke': 'rgba(5, 140, 19,0)',
-                  'header': ''
-                }
-              }]
-            };
+            var o = getDefaultLegend();
             var circle = [];
             // console.log(split);
             split.forEach(function(el) {
@@ -194,6 +201,99 @@ $(function() {
       }
     }
     return svg;
+  };
+
+
+
+  function prepareLegend() {
+    var data = getDefaultLegend();
+    var legends = [];
+    for (var k in data) {
+      var d = {
+        'text': k,
+        'color': data[k][0]["Attributes"]["fill"]
+      };
+      legends.push(d);
+    }
+    var legendHolder = d3.select('#legend-holder');
+    var svg = legendHolder.append("svg").attrs({
+      'height': 100,
+      'width': '100%'
+    });
+
+    var dataL = 0;
+    var offset = 180;
+    var legend = svg.selectAll('g')
+      .data(legends)
+      .enter().append('g')
+      .attr("class", "legends-rect-g")
+      .attr("transform", function(d, i) {
+        if (i === 0) {
+          dataL = offset;
+          return "translate(0,0)"
+        } else {
+          var newdataL = dataL
+          dataL += offset
+          return "translate(" + (newdataL) + ",0)"
+        }
+      })
+
+    legend.append('rect')
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", 10)
+      .attr("height", 10)
+      .style("fill", function(d, i) {
+        return d.color;
+      })
+
+    legend.append('text')
+      .attr("x", 20)
+      .attr("y", 10)
+      .text(function(d, i) {
+        return d.text;
+      })
+      .attr("class", "textselected")
+      .styles({
+        "text-anchor": "start",
+        "font-size": 15,
+        "cursor": "pointer"
+      });
+
+    legend.on('mouseenter', legendMouseEnter);
+    legend.on('mouseout', legendMouseout);
+    legend.on('click', legendMouseclick);
+  };
+
+  function getLegendText(data){
+    var g = d3.select(data).select('text');
+    return g;
+  }
+
+  function legendMouseEnter() {
+    var text = getLegendText(this);
+    text.styles({
+      "font-weight":'bold'
+    });
+  };
+
+  function legendMouseout() {
+    var text = getLegendText(this);
+    console.log(text);
+    text.styles({
+      "font-weight":'normal'
+    });
+  };
+
+  function legendMouseclick(){
+    var g = d3.select(this);
+    var klass = g.classed('enable');
+    if(klass){
+      g.classed('enable', false);
+    }
+    else{
+      g.classed('enable', true);
+    }
   };
 
   function createTbody(rows) {
