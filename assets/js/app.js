@@ -10,21 +10,24 @@ $(function() {
         'Attributes': {
           'fill': 'rgba(200, 55, 55, 0.5)',
           'stroke': 'rgb(200, 55, 55)',
-          'header': ''
+          'header': '',
+          'class': 'poor'
         }
       }],
       'Moderate': [{
         'Attributes': {
           'fill': 'rgba(241, 244, 66,1)',
           'stroke': 'rgb(143, 177, 0)',
-          'header': ''
+          'header': '',
+          'class': 'moderate'
         }
       }],
       'Good': [{
         'Attributes': {
           'fill': 'rgba(5, 140, 19,0.5)',
           'stroke': 'rgba(5, 140, 19,0)',
-          'header': ''
+          'header': '',
+          'class': 'good'
         }
       }]
     };
@@ -112,7 +115,10 @@ $(function() {
               cx: cx,
               cy: cy,
               r: r,
-              fill: d[0]["Attributes"]["fill"]
+              fill: d[0]["Attributes"]["fill"],
+              'class': function(d, i) {
+                return d[0]["Attributes"]["class"];
+              }
             };
           }).on("mouseenter", function(d) {
             var temp = d.slice(1, d.length);
@@ -204,7 +210,8 @@ $(function() {
     for (var k in data) {
       var d = {
         'text': k,
-        'color': data[k][0]["Attributes"]["fill"]
+        'color': data[k][0]["Attributes"]["fill"],
+        'class': data[k][0]["Attributes"]["class"]
       };
       legends.push(d);
     }
@@ -219,13 +226,16 @@ $(function() {
     var legend = svg.selectAll('g')
       .data(legends)
       .enter().append('g')
-      .attr("class", "legends-rect-g")
+      .attr("data-legend", function(d, i) {
+        return d["class"];
+      })
       .attr("transform", function(d, i) {
+        var legendPos = $('#legend-holder>svg').width()/3;
         if (i === 0) {
-          dataL = offset;
-          return "translate(0,0)"
+          dataL = legendPos;
+          return "translate("+legendPos+",0)"
         } else {
-          var newdataL = dataL
+          var newdataL = dataL+offset;
           dataL += offset
           return "translate(" + (newdataL) + ",0)"
         }
@@ -252,41 +262,54 @@ $(function() {
         "font-size": 15,
         "cursor": "pointer"
       });
-
     legend.on('mouseenter', legendMouseEnter);
     legend.on('mouseout', legendMouseout);
     legend.on('click', legendMouseclick);
   };
 
-  function getLegendText(data){
+  function getLegendText(data) {
     var g = d3.select(data).select('text');
     return g;
-  }
+  };
 
   function legendMouseEnter() {
     var text = getLegendText(this);
     text.styles({
-      "font-weight":'bold'
+      "font-weight": 'bold'
     });
   };
 
   function legendMouseout() {
     var text = getLegendText(this);
-    console.log(text);
     text.styles({
-      "font-weight":'normal'
+      "font-weight": 'normal'
     });
   };
 
-  function legendMouseclick(){
+  function legendMouseclick() {
     var g = d3.select(this);
+    var legendGroup = g.attr('data-legend');
     var klass = g.classed('enable');
-    if(klass){
+    if (klass) {
       g.classed('enable', false);
-    }
-    else{
+      toggleLegend(legendGroup, 'initial');
+    } else {
       g.classed('enable', true);
+      toggleLegend(legendGroup, 'hidden');
     }
+  };
+
+  function toggleLegend(legendGroup, display) {
+    var circles = d3.select('#map_body')
+      .selectAll('svg')
+      .selectAll('circle')
+      .each(function(d) {
+        var c = d3.select(this),
+          legendCircle = c.attr('class');
+        if (legendGroup == legendCircle) {
+          c.style('visibility', display);
+        }
+      });
   };
 
   function createTbody(rows) {
