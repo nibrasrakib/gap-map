@@ -277,7 +277,7 @@ $(function() {
   function getLegendText(data) {
     var g = d3.select(data).select('text');
     return g;
-  }
+  };
 
   function legendMouseEnter() {
     var text = getLegendText(this);
