@@ -15,7 +15,7 @@ $(function() {
     var defaultLegend = {
       'Poor': [{
         'Attributes': {
-          'fill': 'rgba(200, 55, 55, 0.5)',
+          'fill': 'rgba(200, 55, 55, 0.9)',
           'stroke': 'rgb(200, 55, 55)',
           'header': '',
           'class': 'poor'
@@ -23,7 +23,7 @@ $(function() {
       }],
       'Moderate': [{
         'Attributes': {
-          'fill': 'rgba(241, 244, 66,1)',
+          'fill': 'rgba(17, 0, 150,0.8)',
           'stroke': 'rgb(143, 177, 0)',
           'header': '',
           'class': 'moderate'
@@ -31,7 +31,7 @@ $(function() {
       }],
       'Good': [{
         'Attributes': {
-          'fill': 'rgba(5, 140, 19,0.5)',
+          'fill': 'rgba(5, 140, 19,0.8)',
           'stroke': 'rgba(5, 140, 19,0)',
           'header': '',
           'class': 'good'
@@ -106,7 +106,7 @@ $(function() {
       cy = 25;
     d3Svg = d3.select(svg).attrs({
       height: 150,
-      width: 150
+      width: 100
     });
 
     for (var k in data) {
@@ -117,10 +117,18 @@ $(function() {
           .datum(data[k])
           .append('circle')
           .attrs(function(d, i) {
-            var r = (d.length * 100) / 50;
+            var r = (d.length * 100) / 30;
+            if(r>25)
+              r  = 22;
             return {
-              cx: cx,
-              cy: cy,
+              cx: function(d,i){
+                // cx = Math.floor(Math.random() * (75 - 25 + 1)) + 25;
+                return cx;
+              },
+              cy: function(d,i){
+                cy = Math.floor(Math.random() * (100 - 25 + 1)) + 25;
+                return cy;
+              },
               r: r,
               fill: d[0]["Attributes"]["fill"],
               'class': function(d, i) {
@@ -153,6 +161,7 @@ $(function() {
               d3.select(this).selectAll('*').remove();
               var span = document.createElement("span");
               var d_span = d3.select(span);
+              d_span.text(d.length-1);
               d_span
                 .styles({
                   "height": "50px",
@@ -162,7 +171,10 @@ $(function() {
                   "position": "absolute",
                   "left": "5px",
                   //"right":"10px",
-                  "top": "10px"
+                  "top": "10px",
+                  'font-size': '32px',
+                  'font-weight': 'bold',
+                  'color':'#f0f0f0'
                 });
               return span;
             });
@@ -250,7 +262,7 @@ $(function() {
 
     legend.append('rect')
       .attr("x", 0)
-      .attr("y", 0)
+      .attr("y", 10)
       .attr("width", 10)
       .attr("height", 10)
       .style("fill", function(d, i) {
@@ -259,14 +271,14 @@ $(function() {
 
     legend.append('text')
       .attr("x", 20)
-      .attr("y", 10)
+      .attr("y", 20)
       .text(function(d, i) {
         return d.text;
       })
       .attr("class", "textselected")
       .styles({
         "text-anchor": "start",
-        "font-size": 15,
+        "font-size": 18,
         "cursor": "pointer"
       });
     legend.on('mouseenter', legendMouseEnter);
