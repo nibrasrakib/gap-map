@@ -11,6 +11,37 @@ var defaultTooltipPosition = {
 };
 
 $(function() {
+  function getDefaultLegend() {
+    var defaultLegend = {
+      'Poor': [{
+        'Attributes': {
+          'fill': 'rgba(200, 55, 55, 0.9)',
+          'stroke': 'rgb(200, 55, 55)',
+          'header': '',
+          'class': 'poor'
+        }
+      }],
+      'Moderate': [{
+        'Attributes': {
+          'fill': 'rgba(17, 0, 150,0.8)',
+          'stroke': 'rgb(143, 177, 0)',
+          'header': '',
+          'class': 'moderate'
+        }
+      }],
+      'Good': [{
+        'Attributes': {
+          'fill': 'rgba(5, 140, 19,0.8)',
+          'stroke': 'rgba(5, 140, 19,0)',
+          'header': '',
+          'class': 'good'
+        }
+      }]
+    };
+    return defaultLegend;
+  }
+
+
   d3.select("body").on("click", function() {
     var tooltip = d3.select('.tooltip'),
       tooltipActive = tooltip.classed('tooltip-active');
@@ -37,29 +68,7 @@ $(function() {
           // console.log(data[j]);
           for (var k = 1; k < data[j].length; k++) {
             var split = data[j][k].split(",");
-            var o = {
-              'Poor': [{
-                'Attributes': {
-                  'fill': 'rgba(200, 55, 55, 0.5)',
-                  'stroke': 'rgb(200, 55, 55)',
-                  'header': ''
-                }
-              }],
-              'Moderate': [{
-                'Attributes': {
-                  'fill': 'rgba(241, 244, 66,1)',
-                  'stroke': 'rgb(143, 177, 0)',
-                  'header': ''
-                }
-              }],
-              'Good': [{
-                'Attributes': {
-                  'fill': 'rgba(5, 140, 19,0.5)',
-                  'stroke': 'rgba(5, 140, 19,0)',
-                  'header': ''
-                }
-              }]
-            };
+            var o = getDefaultLegend();
             var circle = [];
             // console.log(split);
             split.forEach(function(el) {
@@ -96,7 +105,7 @@ $(function() {
       cy = 25;
     d3Svg = d3.select(svg).attrs({
       height: 150,
-      width: 150
+      width: 100
     });
 
     for (var k in data) {
@@ -108,11 +117,22 @@ $(function() {
           .append('circle')
           .attrs(function(d, i) {
             var r = (d.length * 100) / 30;
+            if(r>25)
+              r  = 22;
             return {
-              cx: cx,
-              cy: cy,
+              cx: function(d,i){
+                // cx = Math.floor(Math.random() * (75 - 25 + 1)) + 25;
+                return cx;
+              },
+              cy: function(d,i){
+                cy = Math.floor(Math.random() * (100 - 25 + 1)) + 25;
+                return cy;
+              },
               r: r,
-              fill: d[0]["Attributes"]["fill"]
+              fill: d[0]["Attributes"]["fill"],
+              'class': function(d, i) {
+                return d[0]["Attributes"]["class"];
+              }
             };
           }).on("mouseenter", function(d) {
             var temp = d.slice(1, d.length);
@@ -140,6 +160,7 @@ $(function() {
               d3.select(this).selectAll('*').remove();
               var span = document.createElement("span");
               var d_span = d3.select(span);
+              d_span.text(d.length-1);
               d_span
                 .styles({
                   "height": "50px",
@@ -149,7 +170,10 @@ $(function() {
                   "position": "absolute",
                   "left": "5px",
                   //"right":"10px",
-                  "top": "10px"
+                  "top": "10px",
+                  'font-size': '32px',
+                  'font-weight': 'bold',
+                  'color':'#f0f0f0'
                 });
               return span;
             });
@@ -194,6 +218,116 @@ $(function() {
       }
     }
     return svg;
+  };
+
+
+
+  function prepareLegend() {
+    var data = getDefaultLegend();
+    var legends = [];
+    for (var k in data) {
+      var d = {
+        'text': k,
+        'color': data[k][0]["Attributes"]["fill"],
+        'class': data[k][0]["Attributes"]["class"]
+      };
+      legends.push(d);
+    }
+    var legendHolder = d3.select('#legend-holder');
+    var svg = legendHolder.append("svg").attrs({
+      'height': 100,
+      'width': '100%'
+    });
+
+    var dataL = 0;
+    var offset = 180;
+    var legend = svg.selectAll('g')
+      .data(legends)
+      .enter().append('g')
+      .attr("data-legend", function(d, i) {
+        return d["class"];
+      })
+      .attr("transform", function(d, i) {
+        var legendPos = $('#legend-holder>svg').width()/3;
+        if (i === 0) {
+          dataL = legendPos;
+          return "translate("+legendPos+",0)"
+        } else {
+          var newdataL = dataL+offset;
+          dataL += offset
+          return "translate(" + (newdataL) + ",0)"
+        }
+      })
+
+    legend.append('rect')
+      .attr("x", 0)
+      .attr("y", 10)
+      .attr("width", 10)
+      .attr("height", 10)
+      .style("fill", function(d, i) {
+        return d.color;
+      })
+
+    legend.append('text')
+      .attr("x", 20)
+      .attr("y", 20)
+      .text(function(d, i) {
+        return d.text;
+      })
+      .attr("class", "textselected")
+      .styles({
+        "text-anchor": "start",
+        "font-size": 18,
+        "cursor": "pointer"
+      });
+    legend.on('mouseenter', legendMouseEnter);
+    legend.on('mouseout', legendMouseout);
+    legend.on('click', legendMouseclick);
+  };
+
+  function getLegendText(data) {
+    var g = d3.select(data).select('text');
+    return g;
+  };
+
+  function legendMouseEnter() {
+    var text = getLegendText(this);
+    text.styles({
+      "font-weight": 'bold'
+    });
+  };
+
+  function legendMouseout() {
+    var text = getLegendText(this);
+    text.styles({
+      "font-weight": 'normal'
+    });
+  };
+
+  function legendMouseclick() {
+    var g = d3.select(this);
+    var legendGroup = g.attr('data-legend');
+    var klass = g.classed('enable');
+    if (klass) {
+      g.classed('enable', false);
+      toggleLegend(legendGroup, 'initial');
+    } else {
+      g.classed('enable', true);
+      toggleLegend(legendGroup, 'hidden');
+    }
+  };
+
+  function toggleLegend(legendGroup, display) {
+    var circles = d3.select('#map_body')
+      .selectAll('svg')
+      .selectAll('circle')
+      .each(function(d) {
+        var c = d3.select(this),
+          legendCircle = c.attr('class');
+        if (legendGroup == legendCircle) {
+          c.style('visibility', display);
+        }
+      });
   };
 
   function createTbody(rows) {
