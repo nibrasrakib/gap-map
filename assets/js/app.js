@@ -60,7 +60,7 @@ $(function() {
 
       prepareLegend();
 
-      d3.text('data/sr_.csv', function(data) {
+      d3.text('data/SR.csv', function(data) {
         data = d3.csvParseRows(data);
         var rows = [];
         for (var j = 0; j < data.length; j++) {
