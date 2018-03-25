@@ -49,6 +49,7 @@ $(function() {
         return d["Quality of the Study"];
       });
       legends = $.unique(legends);
+      prepareLegend();
       d3.text('data/impactevaluation.csv', function(data) {
         data = d3.csvParseRows(data);
         var rows = [];
