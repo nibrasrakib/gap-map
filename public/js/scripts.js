@@ -36,6 +36,14 @@ $(function() {
           'header': '',
           'class': 'good'
         }
+      }],
+      'Impact Evaluation':[{
+        'Attributes': {
+          'fill': 'rgba(163, 163, 163,0.8)',
+          'stroke': 'rgba(5, 140, 19,0)',
+          'header': '',
+          'class': 'impactevaluation'
+        }
       }]
     };
     return defaultLegend;
@@ -57,7 +65,7 @@ $(function() {
       });
       legends = $.unique(legends);
       prepareLegend();
-      d3.text('data/impactevaluation.csv', function(data) {
+      d3.text('data/sr.csv', function(data) {
         data = d3.csvParseRows(data);
         var rows = [];
         for (var j = 0; j < data.length; j++) {
@@ -199,7 +207,7 @@ $(function() {
 
             tooltip.styles({
               "left": ($offsetLeft - positionCenter + circleRadius) + "px",
-              "top": ($offsetTop - positionTop - 8) + "px"
+              "top": ($offsetTop - positionTop + 100) + "px"
             });
             tooltip.classed("tooltip-active", true);
             tooltip.on("mouseenter", function(d) {}).on("mouseleave", function(d) {
