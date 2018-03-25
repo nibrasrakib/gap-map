@@ -20,12 +20,12 @@ $(function() {
   });
 
   function prepareDATA() {
-    d3.csv("link1.csv", function(links) {
+    d3.csv("data/link.csv", function(links) {
       var legends = $.map(links, function(d, i) {
         return d["Quality of the Study"];
       });
       legends = $.unique(legends);
-      d3.text('gapmap1.csv', function(data) {
+      d3.text('data/impactevaluation.csv', function(data) {
         data = d3.csvParseRows(data);
         var rows = [];
         for (var j = 0; j < data.length; j++) {
@@ -66,7 +66,7 @@ $(function() {
               if (el != "") {
                 links.forEach(function(obj) {
                   var quality = obj["Quality of the Study"].replace(/\s+$/, '');
-                  // console.log(quality, temp_legend, obj["Sl no"], el);
+                  // console.log(o, obj["Sl no"], el);
                   if (obj["Sl no"] == el) {
                     o[quality].push([obj["Sl no"], obj["Title"], obj["Link"], obj["Study Design"], obj["Quality of the Study"]]);
                   }
@@ -107,7 +107,7 @@ $(function() {
           .datum(data[k])
           .append('circle')
           .attrs(function(d, i) {
-            var r = (d.length * 100) / 50;
+            var r = (d.length * 100) / 30;
             return {
               cx: cx,
               cy: cy,
