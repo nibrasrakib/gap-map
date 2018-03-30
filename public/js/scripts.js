@@ -58,16 +58,131 @@ $(function() {
     }
   });
 
-  function prepareDATA() {
-    d3.csv("data/link.csv", function(links) {
-      var legends = $.map(links, function(d, i) {
-        return d["Quality of the Study"];
+  function getColumnRows(csv, csvCol){
+    var rows = $.map(csv, function(d,i){
+      return d[csvCol];
+    });
+    return rows;
+  }
+
+  function reshapeElements(arr){
+
+    var result = $.map(arr,function(d,i){
+      var s = d.split(",");
+
+      var t = $.map(s, function(d2,i2){
+        var a = $.trim(d2);
+        if(a != ""){
+          return a.toUpperCase();
+        }
       });
-      legends = $.unique(legends);
+      return t;
+    });
+    var r = $.unique(result).sort();
+    return r;
+  };
+
+  function appendSelect(data){
+    var data = data;
+    data.forEach(function(element){
+      var select = d3.select(element.class).append('select').attrs({
+        'class':'filter-select',
+        'data-csv-header':element.id
+      });
+      var options = select.selectAll('option')
+        .data(element.data).enter()
+        .append('option')
+        .text(function(d){
+          return d;
+        })
+        .property('value',function(d){
+          return d;
+        });
+    });
+  }
+
+  function filter(){
+    d3.csv('data/link1.csv', function(l){
+      var country = getColumnRows(l,'country');
+      var regionWHO = getColumnRows(l, 'region_who');
+
+      var year = $.unique(getColumnRows(l,'year')).sort();
+      var uCountry = reshapeElements(country);
+      var uregionWHO = reshapeElements(regionWHO);
+
+      var output = [{
+        data: year,
+        class: '.year',
+        id:'year'
+      },{
+        data:uCountry,
+        class:'.country',
+        id:'country'
+      },{
+        data:uregionWHO,
+        class:'.region_who',
+        id:'region_who'
+      }];
+      appendSelect(output);
+    });
+  };
+
+  function getSplitedValue(data, header){
+    var rows = $.map(data, function(d,i){
+      if(header == "year"){
+        return d[header];
+      }
+      else{
+        return $.trim(d[header].split(",")).toUpperCase();
+      }
+    });
+    return rows;
+  }
+
+  function prepareDATA(selectValues,select=false) {
+    d3.csv("data/link1.csv", function(links) {
+      // console.log(alasql.fn)
+      alasql.fn.seperatorArr = function(s){
+        // console.log(s, val, s.toUpperCase().match(val));
+        // if(s.toUpperCase().match(val))
+          return s.toUpperCase();
+
+
+        // var r = $.map(s.split(","), function(d,i){
+        //   // console.log($.trim(d).toUpperCase() == val);
+        //   if($.trim(d).toUpperCase() == val){
+        //     return $.trim(d).toUpperCase();
+        //   }
+        // });
+        // return s;
+      };
+
+      if(select){
+        var whereC = $.map(selectValues, function(d,i){
+          var obj = '';
+          if(i == selectValues.length-1){
+            obj = d.header + "= '" + d.value.toString();
+          }
+          else{
+            obj = d.header + "= '" + d.value.toString() + "' and ";
+          }
+          return obj;
+        });
+
+        var a = alasql('select * from ? where year = "2015" and region_who like "%South-east asia"', [links]);
+        console.log(whereC.join(""), a);
+      }
+      else{
+        var legends = $.map(links, function(d, i) {
+          return d["qualityofthestudy"];
+        });
+        legends = $.unique(legends);
+      }
+
 
       prepareLegend();
 
-      d3.text('data/SR.csv', function(data) {
+      d3.text('data/gapmap.csv', function(data) {
         data = d3.csvParseRows(data);
         var rows = [];
         for (var j = 0; j < data.length; j++) {
@@ -85,13 +200,13 @@ $(function() {
             split.forEach(function(el) {
               if (el != "") {
                 links.forEach(function(obj) {
-                  var quality = obj["Quality of the Study"].replace(/\s+$/, '');
+                  var quality = obj["qualityofthestudy"].replace(/\s+$/, '');
                   // console.log(o, obj["Sl no"], el);
-                  if (obj["Sl no"] == el) {
-                    o[quality].push([obj["Sl no"], obj["Title"], obj["Link"], obj["Study Design"], obj["Quality of the Study"]]);
+                  if (obj["slno"] == el) {
+                    o[quality].push([obj["slno"], obj["Title"], obj["Link"], obj["study-design"], obj["qualityofthestudy"]]);
                   }
                   if (o[quality][0]["Attributes"]["header"] == "") {
-                    o[quality][0]["Attributes"]["header"] = obj["Study Design"];
+                    o[quality][0]["Attributes"]["header"] = obj["study-design"];
                   }
                   // if(o[quality]["Attributes"]["header"] != ""){
                   //   o[quality]["Attributes"]["header"] = obj["Study Design"];
@@ -249,7 +364,6 @@ $(function() {
       'height': 100,
       'width': '100%'
     });
-
     var dataL = 0;
     var offset = 180;
     var legend = svg.selectAll('g')
@@ -346,8 +460,7 @@ $(function() {
     var horizontal_rows = rows;
     var tr = tbody.selectAll('tr').data(horizontal_rows)
       .enter().append('tr');
-    tr.selectAll('td').data(function(d) {
-        // console.log(d);
+    tr.selectAll('td').remove().data(function(d){
         return d;
       }).enter().append('td')
       .append(function(d, i) {
@@ -365,6 +478,20 @@ $(function() {
   };
 
   prepareDATA();
+  filter();
+
+  $('#submit-filter').on('click', function(){
+    var v = $('.filter-select');
+    var opt = $.map(v, function(d,i){
+      var res = {
+        value: $(d).val(),
+        header: $(d).attr('data-csv-header')
+      };
+      return res;
+    });
+    prepareDATA(opt, true);
+  });
+
 
 });
 

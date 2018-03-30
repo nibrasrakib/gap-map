@@ -24,13 +24,36 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h3>HR Gap Map</h3>
+        <h3>Gap Map</h3>
       </div>
     </div>
     <hr>
     <div class="row">
-      <hr>
+      <div class="col-md-12">
+        <h4>Choose Your Filter</h4>
+      </div>
     </div>
+    <div class="row">
+      <div class="col-md-12 filter-container ">
+        <form>
+          <div class="col-md-2 year">
+            <label>Year</label>
+          </div>
+          <div class="col-md-2 country">
+            <label>Country</label>
+          </div>
+          <div class="col-md-2 region_who">
+            <label>WHO Region</label>
+          </div>
+          <div class="col-md-2">
+            <label>Submit</label>
+            <br>
+            <input type="button" id="submit-filter" value="Submit">
+          </div>
+        </form>
+      </div>
+    </div>
+    <hr>
     <div id="gapmap-holder" class="row">
       <div class="text-center">
         <table id="table" class="table table-bordered">
@@ -77,4 +100,5 @@
   </div>
 </body>
 <script type="text/javascript" src="./public/js/scripts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alasql@0.4"></script>
 </html>

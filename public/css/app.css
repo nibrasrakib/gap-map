@@ -6439,6 +6439,7 @@ body {
 .tooltip {
   position: absolute;
   text-align: center;
+  width: 400px;
   padding: 0 10px 5px;
   background: #fff;
   border: 2px solid #e8dddd;
@@ -6462,6 +6463,9 @@ body {
 
 .tooltip-body > a {
   color: #004b8f; }
+
+.filter-container select {
+  width: 100% !important; }
 
 #table {
   table-layout: fixed !important; }
