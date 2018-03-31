@@ -1,6 +1,7 @@
 var defaultTooltipPosition = {
   "opacity": 0,
-  'top': "-10px"
+  'top': "-10px",
+  'left': '-1000px'
 };
 
 $(function() {
@@ -30,7 +31,7 @@ $(function() {
           'class': 'good'
         }
       }],
-      'Impact Evaluation':[{
+      'Impact Evaluation': [{
         'Attributes': {
           'fill': 'rgba(163, 163, 163,0.8)',
           'stroke': 'rgba(5, 140, 19,0)',
@@ -51,21 +52,21 @@ $(function() {
     }
   });
 
-  function getColumnRows(csv, csvCol){
-    var rows = $.map(csv, function(d,i){
+  function getColumnRows(csv, csvCol) {
+    var rows = $.map(csv, function(d, i) {
       return d[csvCol];
     });
     return rows;
   }
 
-  function reshapeElements(arr){
+  function reshapeElements(arr) {
 
-    var result = $.map(arr,function(d,i){
+    var result = $.map(arr, function(d, i) {
       var s = d.split(",");
 
-      var t = $.map(s, function(d2,i2){
+      var t = $.map(s, function(d2, i2) {
         var a = $.trim(d2);
-        if(a != ""){
+        if (a != "") {
           return a.toUpperCase();
         }
       });
@@ -75,103 +76,95 @@ $(function() {
     return r;
   };
 
-  function appendSelect(data){
+  function appendSelect(data) {
     var data = data;
-    data.forEach(function(element){
+    data.forEach(function(element) {
       var select = d3.select(element.class).append('select').attrs({
-        'class':'filter-select',
-        'data-csv-header':element.id
+        'class': 'filter-select',
+        'data-csv-header': element.id
       });
+      select.append('option')
+        .text("All").property('value', "all");
       var options = select.selectAll('option')
         .data(element.data).enter()
         .append('option')
-        .text(function(d){
+        .text(function(d) {
           return d;
         })
-        .property('value',function(d){
+        .property('value', function(d) {
           return d;
         });
     });
   }
 
-  function filter(){
-    d3.csv('data/link1.csv', function(l){
-      var country = getColumnRows(l,'country');
+  function filter() {
+    d3.csv('data/link1.csv', function(l) {
+      var country = getColumnRows(l, 'country');
       var regionWHO = getColumnRows(l, 'region_who');
+      var regionWB = getColumnRows(l, 'region_wb');
 
-      var year = $.unique(getColumnRows(l,'year')).sort();
+      var year = $.unique(getColumnRows(l, 'year')).sort();
       var uCountry = reshapeElements(country);
       var uregionWHO = reshapeElements(regionWHO);
+      var uregionWB = reshapeElements(regionWB);
 
       var output = [{
         data: year,
         class: '.year',
-        id:'year'
-      },{
-        data:uCountry,
-        class:'.country',
-        id:'country'
-      },{
-        data:uregionWHO,
-        class:'.region_who',
-        id:'region_who'
+        id: 'year'
+      }, {
+        data: uCountry,
+        class: '.country',
+        id: 'country'
+      }, {
+        data: uregionWB,
+        class: '.region_wb',
+        id: 'region_wb'
+      }, {
+        data: uregionWHO,
+        class: '.region_who',
+        id: 'region_who'
       }];
       appendSelect(output);
     });
   };
 
-  function getSplitedValue(data, header){
-    var rows = $.map(data, function(d,i){
-      if(header == "year"){
+  function getSplitedValue(data, header) {
+    var rows = $.map(data, function(d, i) {
+      if (header == "year") {
         return d[header];
-      }
-      else{
+      } else {
         return $.trim(d[header].split(",")).toUpperCase();
       }
     });
     return rows;
   }
 
-  function prepareDATA(selectValues,select=false) {
+  function prepareDATA(selectValues, select = false) {
     d3.csv("data/link1.csv", function(links) {
-      // console.log(alasql.fn)
-      alasql.fn.seperatorArr = function(s){
-        // console.log(s, val, s.toUpperCase().match(val));
-        // if(s.toUpperCase().match(val))
-          return s.toUpperCase();
-
-
-        // var r = $.map(s.split(","), function(d,i){
-        //   // console.log($.trim(d).toUpperCase() == val);
-        //   if($.trim(d).toUpperCase() == val){
-        //     return $.trim(d).toUpperCase();
-        //   }
-        // });
-        // return s;
-      };
-
-      if(select){
-        var whereC = $.map(selectValues, function(d,i){
+      if (select) {
+        var whereC = $.map(selectValues, function(d, i) {
           var obj = '';
-          if(i == selectValues.length-1){
-            obj = d.header + "= '" + d.value.toString();
-          }
-          else{
-            obj = d.header + "= '" + d.value.toString() + "' and ";
+          if (i == selectValues.length - 1) {
+            obj = d.header + ' like "%' + d.value.toString() + '"';
+          } else {
+            obj = d.header + ' like "%' + d.value.toString() + '"' + ' and ';
           }
           return obj;
         });
-
-        var a = alasql('select * from ? where year = "2015" and region_who like "%South-east asia"', [links]);
-        console.log(whereC.join(""), a);
-      }
-      else{
-        var legends = $.map(links, function(d, i) {
-          return d["qualityofthestudy"];
-        });
-        legends = $.unique(legends);
+        var w = whereC.join("");
+        w = (w == "") ? "" : ('where ' + w);
+        var a = alasql('select * from ? ' + w, [links]);
+        links = a;
+        // var a = alasql('select * from ? where year like "%2015" and region_who like "%South-east asia"', [links]);
+      } else {
+        links = links;
       }
 
+      var legends = $.map(links, function(d, i) {
+        return d["qualityofthestudy"];
+      });
+      legends = $.unique(legends);
 
       prepareLegend();
 
@@ -236,15 +229,15 @@ $(function() {
           .append('circle')
           .attrs(function(d, i) {
             var r = (d.length * 100) / 30;
-            if(r>25)
-              r  = 22;
+            if (r > 20)
+              r = 18;
             return {
-              cx: function(d,i){
-                // cx = Math.floor(Math.random() * (75 - 25 + 1)) + 25;
+              cx: function(d, i) {
+                cx = Math.floor(Math.random() * (75 - 25 + 1)) + 25;
                 return cx;
               },
-              cy: function(d,i){
-                cy = Math.floor(Math.random() * (100 - 25 + 1)) + 25;
+              cy: function(d, i) {
+                cy = Math.floor(Math.random() * (70 - 15 + 1)) + 25;
                 return cy;
               },
               r: r,
@@ -273,13 +266,13 @@ $(function() {
 
             tooltip
               .transition()
-              .duration(100)
+              .duration(500)
               .style("opacity", .9);
             tooltipHeader.append(function() {
               d3.select(this).selectAll('*').remove();
               var span = document.createElement("span");
               var d_span = d3.select(span);
-              d_span.text(d.length-1);
+              d_span.text(d.length - 1);
               d_span
                 .styles({
                   "height": "50px",
@@ -292,7 +285,7 @@ $(function() {
                   "top": "10px",
                   'font-size': '32px',
                   'font-weight': 'bold',
-                  'color':'#f0f0f0'
+                  'color': '#f0f0f0'
                 });
               return span;
             });
@@ -314,10 +307,9 @@ $(function() {
               positionCenter = (tooltip.node().getBoundingClientRect().width / 2),
               positionTop = tooltip.node().getBoundingClientRect().height,
               circleRadius = parseInt(circle.attr('r'));
-
             tooltip.styles({
               "left": ($offsetLeft - positionCenter + circleRadius) + "px",
-              "top": ($offsetTop - positionTop + 100) + "px"
+              "top": ($offsetTop) + "px"
             });
             tooltip.classed("tooltip-active", true);
             tooltip.on("mouseenter", function(d) {}).on("mouseleave", function(d) {
@@ -352,13 +344,15 @@ $(function() {
       };
       legends.push(d);
     }
-    var legendHolder = d3.select('#legend-holder');
-    var svg = legendHolder.append("svg").attrs({
-      'height': 100,
-      'width': '100%'
-    });
+    // var legendHolder = d3.select('#legend-holder').html("");
+    // var svg = legendHolder.append("svg").attrs({
+    //   'height': 100,
+    //   'width': '100%'
+    // });
+    var svg = d3.select('#legend-holder svg');
+    svg.html("");
     var dataL = 0;
-    var offset = 180;
+    var offset = 120;
     var legend = svg.selectAll('g')
       .data(legends)
       .enter().append('g')
@@ -366,12 +360,12 @@ $(function() {
         return d["class"];
       })
       .attr("transform", function(d, i) {
-        var legendPos = $('#legend-holder>svg').width()/3;
+        var legendPos = $('#legend-holder>svg').width() / 3;
         if (i === 0) {
           dataL = legendPos;
-          return "translate("+legendPos+",0)"
+          return "translate(" + legendPos + ",0)"
         } else {
-          var newdataL = dataL+offset;
+          var newdataL = dataL + offset;
           dataL += offset
           return "translate(" + (newdataL) + ",0)"
         }
@@ -449,19 +443,23 @@ $(function() {
   };
 
   function createTbody(rows) {
-    var tbody = d3.select('#map_body');
+    var tbody = d3.select('#map_body').html("");
     var horizontal_rows = rows;
     var tr = tbody.selectAll('tr').data(horizontal_rows)
       .enter().append('tr');
-    tr.selectAll('td').remove().data(function(d){
+    tr.selectAll('td').remove().data(function(d) {
         return d;
       }).enter().append('td')
+      .text(function(d) {
+        if (Object.keys(d)[0] == "Text") {
+          return d.Text;
+        }
+      })
       .append(function(d, i) {
         if (Object.keys(d)[0] == "Text") {
-          var label = document.createElementNS("http://www.w3.org/2000/label", "label");
-          var d3Label = d3.select(label);
-          d3Label.text(d.Text);
-          //console.log(label, d3Label);
+          var label = document.createElementNS("http://www.w3.org/2000/label", "div");
+          // var d3Label = d3.select(label);
+          // d3Label.text(d.Text);
           return label;
         } else {
           var svg = createSVG(d);
@@ -471,19 +469,48 @@ $(function() {
   };
 
   prepareDATA();
+
   filter();
 
-  $('#submit-filter').on('click', function(){
-    var v = $('.filter-select');
-    var opt = $.map(v, function(d,i){
-      var res = {
-        value: $(d).val(),
-        header: $(d).attr('data-csv-header')
+  function convertToCanvas(target, canvasId) {
+    var target = $(target).get(0);
+    return html2canvas(target).then(function(canvas) {
+      var base64image = canvas.toDataURL("image/png");
+      var canvas = document.getElementById(canvasId);
+      var ctx = canvas.getContext("2d");
+      var image = new Image();
+      image.onload = function() {
+        ctx.drawImage(image, 0, 0);
       };
-      return res;
+      image.src = base64image;
+      var a = $('#d');
+      a.attr('href',base64image);
+      a.download = "gapmap.png";
+      a[0].click();
+    });
+  };
+
+  $('#submit-filter').on('click', function() {
+    var v = $('.filter-select');
+    var opt = $.map(v, function(d, i) {
+      var v = $(d).val();
+      if (v == "all") {
+
+      } else {
+        var res = {
+          value: $(d).val(),
+          header: $(d).attr('data-csv-header')
+        };
+        return res;
+      }
     });
     prepareDATA(opt, true);
   });
 
-
+  $('#downloadLink').click(function() {
+    convertToCanvas('.container','the_canvas_element_id');
+  });
+  // $('#d').click(function(e){
+  //   convertToCanvas('.container','the_canvas_element_id');
+  // })
 });

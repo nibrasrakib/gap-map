@@ -20,85 +20,114 @@
   </div>
   <div class="container">
     <div class="row">
-      <br>
+      <div class="logo pull-right">
+        <img src="logo.png" alt="">
+      </div>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h3>Gap Map</h3>
+        <div class="col-md-12">
+          <h3 class="h-1">Gap Map</h3>
+          <span class="suggestion">
+            <span class="q">?</span> HOVER OVER a bubble to see details with links to studies. CLICK ON a link in the axes to see an explanation of the Intervention / Outcome. SELECT an area of the chart to zoom in. TOGGLE study categories on and off using the legend at the bottom of the chart. EXPORT the chart using the menu button at the top right of the chart.
+          </span>
+          <hr>
+        </div>
       </div>
     </div>
-    <hr>
     <div class="row">
       <div class="col-md-12">
-        <h4>Choose Your Filter</h4>
+        <div class="col-md-12">
+          <h4 class="h-1">Choose Your Filter</h4>
+        </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12 filter-container ">
-        <form>
-          <div class="col-md-2 year">
-            <label>Year</label>
-          </div>
-          <div class="col-md-2 country">
-            <label>Country</label>
-          </div>
-          <div class="col-md-2 region_who">
-            <label>WHO Region</label>
-          </div>
-          <div class="col-md-2">
-            <label>Submit</label>
-            <br>
-            <input type="button" id="submit-filter" value="Submit">
-          </div>
-        </form>
+      <div class="col-md-12">
+        <div class="col-md-12 filter-container">
+            <div class="col-md-2 year">
+              <label>Year</label>
+            </div>
+            <div class="col-md-2 country">
+              <label>Country</label>
+            </div>
+            <div class="col-md-2 region_wb">
+              <label>World Bank Region</label>
+            </div>
+            <div class="col-md-2 region_who">
+              <label>WHO Region</label>
+            </div>
+            <div class="col-md-2">
+              <label>Submit</label>
+              <br>
+              <input type="button" id="submit-filter" value="Submit">
+            </div>
+            <div class="col-md-2" style="border-left: 1px solid white;">
+              <label>Export</label>
+              <br>
+              <input type="button" id="downloadLink" value="Export as PNG">
+              <a id="d" class="hide" download>Download</a>
+            </div>
+        </div>
       </div>
     </div>
-    <hr>
     <div id="gapmap-holder" class="row">
-      <div class="text-center">
-        <table id="table" class="table table-bordered">
-          <thead>
-            <tr>
-              <td></td>
-              <td>Policy</td>
-              <td>Governance
-              </td>
-              <td>Accountability
-              </td>
-              <td>Social Responsibility
-              </td>
-              <td>Purchasing
-              </td>
-              <td>Transparency
-              </td>
-              <td>Compliance
-              </td>
-              <td>Availability of Workforce</td>
-            </tr>
-            <!-- <tr>
-              <td></td>
-              <td>Legal Framework</td>
-              <td>Policy</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr> -->
-          </thead>
-          <tbody id="map_body">
+      <div class="col-md-12">
+        <div class="text-center">
+          <table id="table" class="table table-bordered">
+            <thead>
+              <tr>
+                <td></td>
+                <td>Policy</td>
+                <td>Governance
+                </td>
+                <td>Accountability
+                </td>
+                <td>Social Responsibility
+                </td>
+                <td>Purchasing
+                </td>
+                <td>Transparency
+                </td>
+                <td>Compliance
+                </td>
+                <td>Availability of Workforce</td>
+              </tr>
+              <!-- <tr>
+                <td></td>
+                <td>Legal Framework</td>
+                <td>Policy</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr> -->
+            </thead>
+            <tbody id="map_body">
 
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-    <div id="legend-holder" class="row">
 
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12">
+            <div id="legend-holder" class="col-md-12">
+              <svg xmlns="http://www.w3.org/2000/svg" class="chart-container" width="100%" height="100">
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </body>
+<canvas id="the_canvas_element_id" class="hide" height="3000" width="2000"></canvas>
 <script type="text/javascript" src="./public/js/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/alasql@0.4"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </html>

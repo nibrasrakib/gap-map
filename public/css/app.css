@@ -6470,4 +6470,31 @@ body {
 #table {
   table-layout: fixed !important; }
 
+.logo {
+  padding-right: 30px;
+  padding-top: 10px; }
+
+.h-1 {
+  color: #47A3AD;
+  font-weight: bold; }
+
+.filter-container {
+  background-color: #008080;
+  padding: 10px; }
+
+.filter-container label {
+  color: white;
+  font-weight: bold;
+  font-size: 18px; }
+
+.suggestion {
+  font-size: 15px;
+  color: #008080; }
+
+.q {
+  font-size: 15px;
+  padding-right: 5px;
+  padding-left: 5px;
+  background-color: #f0f0f0; }
+
 /*# sourceMappingURL=app.css.map */
