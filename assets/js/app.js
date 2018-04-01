@@ -234,10 +234,13 @@ $(function() {
             return {
               cx: function(d, i) {
                 cx = Math.floor(Math.random() * (75 - 25 + 1)) + 25;
+                console.log(cx);
                 return cx;
               },
               cy: function(d, i) {
-                cy = Math.floor(Math.random() * (70 - 15 + 1)) + 25;
+                // cy = Math.floor(Math.random() * (70 - 15 + 1)) + 25;
+                console.log(cy);
+                cy = cy+1;
                 return cy;
               },
               r: r,
