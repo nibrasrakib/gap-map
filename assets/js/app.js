@@ -7,7 +7,7 @@ var defaultTooltipPosition = {
 $(function() {
   function getDefaultLegend() {
     var defaultLegend = {
-      'Poor': [{
+      'Low Grade SR': [{
         'Attributes': {
           'fill': 'rgba(200, 55, 55, 0.9)',
           'stroke': 'rgb(200, 55, 55)',
@@ -15,7 +15,7 @@ $(function() {
           'class': 'poor'
         }
       }],
-      'Moderate': [{
+      'Moderate Grade SR': [{
         'Attributes': {
           'fill': 'rgba(17, 0, 150,0.8)',
           'stroke': 'rgb(143, 177, 0)',
@@ -23,7 +23,7 @@ $(function() {
           'class': 'moderate'
         }
       }],
-      'Good': [{
+      'High Grade SR': [{
         'Attributes': {
           'fill': 'rgba(5, 140, 19,0.8)',
           'stroke': 'rgba(5, 140, 19,0)',
