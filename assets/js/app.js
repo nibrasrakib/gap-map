@@ -355,7 +355,7 @@ $(function() {
     var svg = d3.select('#legend-holder svg');
     svg.html("");
     var dataL = 0;
-    var offset = 120;
+    var offset = 200;
     var legend = svg.selectAll('g')
       .data(legends)
       .enter().append('g')
@@ -363,7 +363,7 @@ $(function() {
         return d["class"];
       })
       .attr("transform", function(d, i) {
-        var legendPos = $('#legend-holder>svg').width() / 3;
+        var legendPos = $('#legend-holder>svg').width() / 8;
         if (i === 0) {
           dataL = legendPos;
           return "translate(" + legendPos + ",0)"
