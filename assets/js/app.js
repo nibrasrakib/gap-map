@@ -228,9 +228,9 @@ $(function() {
           .datum(data[k])
           .append('circle')
           .attrs(function(d, i) {
-            var r = (d.length * 100) / 30;
-            if (r > 20)
-              r = 18;
+            var r = (d.length * 100) / 55;
+            // if (r>15)
+            //   r = 18;
             return {
               cx: function(d, i) {
                 cx = Math.floor(Math.random() * (75 - 25 + 1)) + 25;
