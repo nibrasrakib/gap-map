@@ -78,14 +78,17 @@ $(function() {
 
   function appendSelect(data) {
     var data = data;
+    console.log(data);
     data.forEach(function(element) {
       var select = d3.select(element.class).append('select').attrs({
         'class': 'filter-select',
         'data-csv-header': element.id
       });
       select.append('option')
-        .text("All").property('value', "all");
-      var options = select.selectAll('option')
+        .text("All").property('value', "all").attrs({
+          'class':'option-all'
+        });
+      var options = select.selectAll("option:not(.option-all)")
         .data(element.data).enter()
         .append('option')
         .text(function(d) {
