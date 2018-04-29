@@ -6472,6 +6472,8 @@ body {
 
 #table {
   table-layout: fixed !important; }
+  #table td:first-child {
+    word-wrap: break-word; }
 
 .logo {
   padding-right: 30px;

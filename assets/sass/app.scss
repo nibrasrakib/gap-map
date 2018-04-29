@@ -76,6 +76,9 @@ body {
 
 #table {
   table-layout: fixed !important;
+  td:first-child{
+    word-wrap: break-word;
+  }
 }
 
 .logo {

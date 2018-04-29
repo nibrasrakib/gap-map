@@ -463,10 +463,10 @@ $(function() {
       })
       .append(function(d, i) {
         if (Object.keys(d)[0] == "Text") {
-          var label = document.createElementNS("http://www.w3.org/2000/label", "div");
+          var div = document.createElementNS("http://www.w3.org/2000/label", "div");
           // var d3Label = d3.select(label);
           // d3Label.text(d.Text);
-          return label;
+          return div;
         } else {
           var svg = createSVG(d);
           return svg;
