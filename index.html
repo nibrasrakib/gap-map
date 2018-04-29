@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./public/css/app.css" />
   <link href="./favicon.ico" rel="shortcut icon" type="image/x-icon" />
 </head>
+
 <body>
   <div class="tooltip">
     <div class="tooltip-header">
@@ -45,29 +46,29 @@
     <div class="row">
       <div class="col-md-12">
         <div class="col-md-12 filter-container">
-            <div class="col-md-2 year">
-              <label>Year</label>
-            </div>
-            <div class="col-md-2 country">
-              <label>Country</label>
-            </div>
-            <div class="col-md-2 region_wb">
-              <label>World Bank Region</label>
-            </div>
-            <div class="col-md-2 region_who">
-              <label>WHO Region</label>
-            </div>
-            <div class="col-md-2">
-              <label>Submit</label>
-              <br>
-              <input type="button" id="submit-filter" value="Submit">
-            </div>
-            <div class="col-md-2" style="border-left: 1px solid white;">
-              <label>Export</label>
-              <br>
-              <input type="button" id="downloadLink" value="Export as PNG">
-              <a id="d" class="hide" download>Download</a>
-            </div>
+          <div class="col-md-2 year">
+            <label>Year</label>
+          </div>
+          <div class="col-md-2 country">
+            <label>Country</label>
+          </div>
+          <div class="col-md-2 region_wb">
+            <label>World Bank Region</label>
+          </div>
+          <div class="col-md-2 region_who">
+            <label>WHO Region</label>
+          </div>
+          <div class="col-md-2">
+            <label>Submit</label>
+            <br>
+            <input type="button" id="submit-filter" value="Submit">
+          </div>
+          <div class="col-md-2" style="border-left: 1px solid white;">
+            <label>Export</label>
+            <br>
+            <input type="button" id="downloadLink" value="Export as PNG">
+            <a id="d" class="hide" download>Download</a>
+          </div>
         </div>
       </div>
     </div>
@@ -78,33 +79,30 @@
             <thead>
               <tr>
                 <td></td>
-                <td>Policy</td>
-                <td>Governance
-                </td>
-                <td>Accountability
-                </td>
-                <td>Social Responsibility
-                </td>
-                <td>Purchasing
-                </td>
-                <td>Transparency
-                </td>
-                <td>Compliance
-                </td>
+                <td colspan="3">Health system reform</td>
+                <td>Service Coverage</td>
+                <td>Accountability</td>
+                <td>Social Responsibility</td>
+                <td>Access to health care</td>
+                <td>Transparency</td>
+                <td>Compliance</td>
                 <td>Availability of Workforce</td>
+                <td>Quality of care</td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <td></td>
-                <td>Legal Framework</td>
-                <td>Policy</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>Decentralization</td>
+                <td>Reform</td>
+                <td>Integration</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
-              </tr> -->
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
             </thead>
             <tbody id="map_body">
 
@@ -130,4 +128,5 @@
 <script type="text/javascript" src="./public/js/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/alasql@0.4"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 </html>

@@ -86,7 +86,7 @@ $(function() {
       });
       select.append('option')
         .text("All").property('value', "all").attrs({
-          'class':'option-all'
+          'class': 'option-all'
         });
       var options = select.selectAll("option:not(.option-all)")
         .data(element.data).enter()
@@ -171,7 +171,7 @@ $(function() {
 
       prepareLegend();
 
-      d3.text('data/gapmap.csv', function(data) {
+      d3.text('data/gapmap1.csv', function(data) {
         data = d3.csvParseRows(data);
         var rows = [];
         for (var j = 0; j < data.length; j++) {
@@ -243,7 +243,7 @@ $(function() {
               cy: function(d, i) {
                 // cy = Math.floor(Math.random() * (70 - 15 + 1)) + 25;
                 console.log(cy);
-                cy = cy+1;
+                cy = cy + 1;
                 return cy;
               },
               r: r,
@@ -490,7 +490,7 @@ $(function() {
       };
       image.src = base64image;
       var a = $('#d');
-      a.attr('href',base64image);
+      a.attr('href', base64image);
       a.download = "gapmap.png";
       a[0].click();
     });
@@ -514,7 +514,7 @@ $(function() {
   });
 
   $('#downloadLink').click(function() {
-    convertToCanvas('.container','the_canvas_element_id');
+    convertToCanvas('.container', 'the_canvas_element_id');
   });
   // $('#d').click(function(e){
   //   convertToCanvas('.container','the_canvas_element_id');

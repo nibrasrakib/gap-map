@@ -66,37 +66,46 @@ body {
 // 	margin-left: -20px;
 // }
 
-.filter-container select{
+.filter-container select {
   width: 100% !important;
 }
 
 #table {
   table-layout: fixed !important;
 }
-.logo{
+
+.logo {
   padding-right: 30px;
   padding-top: 10px;
 }
-.h-1{
-  color:#47A3AD;
+
+.h-1 {
+  color: #47A3AD;
   font-weight: bold;
 }
-.filter-container{
+
+.filter-container {
   background-color: #008080;
   padding: 10px;
 }
-.filter-container label{
+
+.filter-container label {
   color: white;
   font-weight: bold;
   font-size: 18px;
 }
-.suggestion{
+
+.suggestion {
   font-size: 15px;
-  color:#008080;
+  color: #008080;
 }
-.q{
+
+.q {
   font-size: 15px;
   padding-right: 5px;
   padding-left: 5px;
   background-color: #f0f0f0;
+}
+thead{
+  word-wrap: break-word;
 }

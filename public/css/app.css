@@ -6497,4 +6497,7 @@ body {
   padding-left: 5px;
   background-color: #f0f0f0; }
 
+thead {
+  word-wrap: break-word; }
+
 /*# sourceMappingURL=app.css.map */
