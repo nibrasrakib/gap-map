@@ -6447,7 +6447,7 @@ body {
   font-family: 'robotolight' !important; }
 
 .cb {
-  color: #4A4A49 !important; }
+  color: #f1f0ec !important; }
 
 .tooltip-header > h3 {
   position: relative;
@@ -6473,7 +6473,10 @@ body {
 #table {
   table-layout: fixed !important; }
   #table td:first-child {
-    word-wrap: break-word; }
+    white-space: normal;
+    width: 100px;
+    font-size: 12px;
+    text-transform: capitalize; }
 
 .logo {
   padding-right: 30px;
@@ -6503,9 +6506,13 @@ body {
   background-color: #f0f0f0; }
 
 .footer {
-  color: #000 !important; }
+  background-color: #345D78 !important; }
 
-thead {
-  word-wrap: break-word; }
+thead td:not([colspan]) {
+  white-space: normal; }
+
+thead tr:nth-child(2) {
+  font-size: 11px;
+  font-weight: bold; }
 
 /*# sourceMappingURL=app.css.map */

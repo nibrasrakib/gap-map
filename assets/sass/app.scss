@@ -27,7 +27,7 @@ body {
 }
 
 .cb{
-  color:#4A4A49 !important;
+  color:#f1f0ec !important;
 }
 
 .tooltip-header > h3 {
@@ -77,7 +77,11 @@ body {
 #table {
   table-layout: fixed !important;
   td:first-child{
-    word-wrap: break-word;
+    white-space: normal;
+    width:100px;
+    font-size: 12px;
+    text-transform: capitalize;
+    // font-weight: bold;
   }
 }
 
@@ -114,8 +118,18 @@ body {
   background-color: #f0f0f0;
 }
 .footer{
-  color:#000 !important;
+  background-color: #345D78 !important;
 }
-thead{
-  word-wrap: break-word;
+thead {
+  td:not([colspan]){
+    white-space: normal;
+    // width: 100px;
+  }
+  td[colspan="3"]{
+    // width: 270px;
+  }
+  tr:nth-child(2){
+    font-size: 11px;
+    font-weight: bold;
+  }
 }

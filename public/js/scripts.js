@@ -223,10 +223,10 @@ $(function() {
 
   function createSVG(data) {
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    var cx = 25,
-      cy = 25;
+    var cx = 15,
+      cy = 15;
     d3Svg = d3.select(svg).attrs({
-      height: 150,
+      height: 80,
       width: 100
     });
 
@@ -238,7 +238,7 @@ $(function() {
           .datum(data[k])
           .append('circle')
           .attrs(function(d, i) {
-            var r = (d.length * 100) / 55;
+            var r = (d.length * 100) / 42;
             // if (r>15)
             //   r = 18;
             return {
@@ -337,8 +337,8 @@ $(function() {
               'stroke-width': "0"
             });
           });
-        cx = cx + 30;
-        cy = cy + 30;
+        cx = cx + 40;
+        cy = cy + 15;
       }
     }
     return svg;
