@@ -156,9 +156,9 @@ $(function() {
         var whereC = $.map(selectValues, function(d, i) {
           var obj = '';
           if (i == selectValues.length - 1) {
-            obj = d.header + ' like "%' + d.value.toString() + '"';
+            obj = d.header + ' like "%' + d.value.toString() + '%"';
           } else {
-            obj = d.header + ' like "%' + d.value.toString() + '"' + ' and ';
+            obj = d.header + ' like "%' + d.value.toString() + '%"' + ' and ';
           }
           return obj;
         });
@@ -166,6 +166,7 @@ $(function() {
         w = (w == "") ? "" : ('where ' + w);
         var a = alasql('select * from ? ' + w, [links]);
         links = a;
+        console.log(w);
         // var a = alasql('select * from ? where year like "%2015" and region_who like "%South-east asia"', [links]);
       } else {
         links = links;
@@ -244,12 +245,12 @@ $(function() {
             return {
               cx: function(d, i) {
                 cx = Math.floor(Math.random() * (75 - 25 + 1)) + 25;
-                console.log(cx);
+                // console.log(cx);
                 return cx;
               },
               cy: function(d, i) {
                 // cy = Math.floor(Math.random() * (70 - 15 + 1)) + 25;
-                console.log(cy);
+                // console.log(cy);
                 cy = cy + 1;
                 return cy;
               },
