@@ -4,7 +4,7 @@ var defaultTooltipPosition = {
   'left': '-1000px'
 };
 
-$(function() {
+$(function () {
   function getDefaultLegend() {
     var defaultLegend = {
       'Low Grade SR': [{
@@ -44,7 +44,7 @@ $(function() {
   }
 
 
-  d3.select("body").on("click", function() {
+  d3.select("body").on("click", function () {
     var tooltip = d3.select('.tooltip'),
       tooltipActive = tooltip.classed('tooltip-active');
     if (tooltipActive) {
@@ -53,7 +53,7 @@ $(function() {
   });
 
   function getColumnRows(csv, csvCol) {
-    var rows = $.map(csv, function(d, i) {
+    var rows = $.map(csv, function (d, i) {
       return d[csvCol];
     });
     return rows;
@@ -61,10 +61,10 @@ $(function() {
 
   function reshapeElements(arr) {
 
-    var result = $.map(arr, function(d, i) {
+    var result = $.map(arr, function (d, i) {
       var s = d.split(",");
 
-      var t = $.map(s, function(d2, i2) {
+      var t = $.map(s, function (d2, i2) {
         var a = $.trim(d2);
         if (a != "") {
           return a.toUpperCase();
@@ -79,7 +79,7 @@ $(function() {
   function appendSelect(data) {
     var data = data;
     console.log(data);
-    data.forEach(function(element) {
+    data.forEach(function (element) {
       var select = d3.select(element.class).append('select').attrs({
         'class': 'filter-select',
         'data-csv-header': element.id
@@ -91,17 +91,17 @@ $(function() {
       var options = select.selectAll("option:not(.option-all)")
         .data(element.data).enter()
         .append('option')
-        .text(function(d) {
+        .text(function (d) {
           return d;
         })
-        .property('value', function(d) {
+        .property('value', function (d) {
           return d;
         });
     });
   }
 
   function filter() {
-    d3.csv('data/link1.csv', function(l) {
+    d3.csv('data/link1.csv', function (l) {
       var country = getColumnRows(l, 'country');
       var regionWHO = getColumnRows(l, 'region_who');
       var regionWB = getColumnRows(l, 'region_wb');
@@ -133,7 +133,7 @@ $(function() {
   };
 
   function getSplitedValue(data, header) {
-    var rows = $.map(data, function(d, i) {
+    var rows = $.map(data, function (d, i) {
       if (header == "year") {
         return d[header];
       } else {
@@ -144,9 +144,9 @@ $(function() {
   }
 
   function prepareDATA(selectValues, select = false) {
-    d3.csv("data/link1.csv", function(links) {
+    d3.csv("data/link1.csv", function (links) {
       if (select) {
-        var whereC = $.map(selectValues, function(d, i) {
+        var whereC = $.map(selectValues, function (d, i) {
           var obj = '';
           if (i == selectValues.length - 1) {
             obj = d.header + ' like "%' + d.value.toString() + '%"';
@@ -165,14 +165,14 @@ $(function() {
         links = links;
       }
 
-      var legends = $.map(links, function(d, i) {
+      var legends = $.map(links, function (d, i) {
         return d["qualityofthestudy"];
       });
       legends = $.unique(legends);
 
       prepareLegend();
 
-      d3.text('data/gapmap1.csv', function(data) {
+      d3.text('data/gapmap1.csv', function (data) {
         data = d3.csvParseRows(data);
         var rows = [];
         for (var j = 0; j < data.length; j++) {
@@ -187,9 +187,9 @@ $(function() {
             var o = getDefaultLegend();
             var circle = [];
             // console.log(split);
-            split.forEach(function(el) {
+            split.forEach(function (el) {
               if (el != "") {
-                links.forEach(function(obj) {
+                links.forEach(function (obj) {
                   var quality = obj["qualityofthestudy"].replace(/\s+$/, '');
                   // console.log(o, obj["Sl no"], el);
                   if (obj["slno"] == el) {
@@ -231,17 +231,17 @@ $(function() {
         d3Svg
           .datum(data[k])
           .append('circle')
-          .attrs(function(d, i) {
+          .attrs(function (d, i) {
             var r = (d.length * 100) / 42;
             // if (r>15)
             //   r = 18;
             return {
-              cx: function(d, i) {
+              cx: function (d, i) {
                 cx = Math.floor(Math.random() * (75 - 25 + 1)) + 25;
                 // console.log(cx);
                 return cx;
               },
-              cy: function(d, i) {
+              cy: function (d, i) {
                 // cy = Math.floor(Math.random() * (70 - 15 + 1)) + 25;
                 // console.log(cy);
                 cy = cy + 1;
@@ -249,13 +249,13 @@ $(function() {
               },
               r: r,
               fill: d[0]["Attributes"]["fill"],
-              'class': function(d, i) {
+              'class': function (d, i) {
                 return d[0]["Attributes"]["class"];
               }
             };
-          }).on("mouseenter", function(d) {
+          }).on("mouseenter", function (d) {
             var temp = d.slice(1, d.length);
-            var h = $.map(temp, function(d, i) {
+            var h = $.map(temp, function (d, i) {
               var href = d[2],
                 t = d[1],
                 h = "<a target='_blank' href='" + href + "'>" + t + "</a><br />";
@@ -275,7 +275,7 @@ $(function() {
               .transition()
               .duration(500)
               .style("opacity", .9);
-            tooltipHeader.append(function() {
+            tooltipHeader.append(function () {
               d3.select(this).selectAll('*').remove();
               var span = document.createElement("span");
               var d_span = d3.select(span);
@@ -296,7 +296,7 @@ $(function() {
                 });
               return span;
             });
-            tooltipHeader.append(function() {
+            tooltipHeader.append(function () {
               var h3 = document.createElement("h3");
               var d_h3 = d3.select(h3);
               d_h3.text(d[0]["Attributes"]["header"]);
@@ -305,7 +305,7 @@ $(function() {
               });
               return h3;
             });
-            tooltipBody.html(function() {
+            tooltipBody.html(function () {
               return h.join("");
             });
 
@@ -319,12 +319,12 @@ $(function() {
               "top": ($offsetTop) + "px"
             });
             tooltip.classed("tooltip-active", true);
-            tooltip.on("mouseenter", function(d) {}).on("mouseleave", function(d) {
+            tooltip.on("mouseenter", function (d) {}).on("mouseleave", function (d) {
               // console.log("tooltip mouseout");
               tooltip.styles(defaultTooltipPosition);
             });
           })
-          .on("mouseleave", function(d) {
+          .on("mouseleave", function (d) {
             var circle = d3.select(this);
             circle.attrs({
               'stroke': "",
@@ -363,10 +363,10 @@ $(function() {
     var legend = svg.selectAll('g')
       .data(legends)
       .enter().append('g')
-      .attr("data-legend", function(d, i) {
+      .attr("data-legend", function (d, i) {
         return d["class"];
       })
-      .attr("transform", function(d, i) {
+      .attr("transform", function (d, i) {
         var legendPos = $('#legend-holder>svg').width() / 8;
         if (i === 0) {
           dataL = legendPos;
@@ -383,14 +383,14 @@ $(function() {
       .attr("y", 10)
       .attr("width", 10)
       .attr("height", 10)
-      .style("fill", function(d, i) {
+      .style("fill", function (d, i) {
         return d.color;
       })
 
     legend.append('text')
       .attr("x", 20)
       .attr("y", 20)
-      .text(function(d, i) {
+      .text(function (d, i) {
         return d.text;
       })
       .attr("class", "textselected")
@@ -440,7 +440,7 @@ $(function() {
     var circles = d3.select('#map_body')
       .selectAll('svg')
       .selectAll('circle')
-      .each(function(d) {
+      .each(function (d) {
         var c = d3.select(this),
           legendCircle = c.attr('class');
         if (legendGroup == legendCircle) {
@@ -454,15 +454,15 @@ $(function() {
     var horizontal_rows = rows;
     var tr = tbody.selectAll('tr').data(horizontal_rows)
       .enter().append('tr');
-    tr.selectAll('td').remove().data(function(d) {
+    tr.selectAll('td').remove().data(function (d) {
         return d;
       }).enter().append('td')
-      .text(function(d) {
+      .text(function (d) {
         if (Object.keys(d)[0] == "Text") {
           return d.Text;
         }
       })
-      .append(function(d, i) {
+      .append(function (d, i) {
         if (Object.keys(d)[0] == "Text") {
           var div = document.createElementNS("http://www.w3.org/2000/label", "div");
           // var d3Label = d3.select(label);
@@ -481,12 +481,12 @@ $(function() {
 
   function convertToCanvas(target, canvasId) {
     var target = $(target).get(0);
-    return html2canvas(target).then(function(canvas) {
+    return html2canvas(target).then(function (canvas) {
       var base64image = canvas.toDataURL("image/png");
       var canvas = document.getElementById(canvasId);
       var ctx = canvas.getContext("2d");
       var image = new Image();
-      image.onload = function() {
+      image.onload = function () {
         ctx.drawImage(image, 0, 0);
       };
       image.src = base64image;
@@ -497,9 +497,22 @@ $(function() {
     });
   };
 
-  $('#submit-filter').on('click', function() {
+  function convertToPDF(target, canvas){
+    var fileName = "gapmap.pdf";
+    html2canvas(document.querySelector('body')).then(canvas => {
+			let pdf = new jsPDF('p', 'mm', 'a4');
+			pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, 211, 298);
+			pdf.save(fileName);
+		});
+  };
+
+  $("#downloadPdf").click(function () {
+    convertToPDF();
+  });
+
+  $('#submit-filter').on('click', function () {
     var v = $('.filter-select');
-    var opt = $.map(v, function(d, i) {
+    var opt = $.map(v, function (d, i) {
       var v = $(d).val();
       if (v == "all") {
 
@@ -514,8 +527,8 @@ $(function() {
     prepareDATA(opt, true);
   });
 
-  $('#downloadLink').click(function() {
-    convertToCanvas('.container', 'the_canvas_element_id');
+  $('#downloadLink').click(function () {
+    convertToCanvas('.main-body', 'the_canvas_element_id');
   });
   // $('#d').click(function(e){
   //   convertToCanvas('.container','the_canvas_element_id');

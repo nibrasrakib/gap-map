@@ -8,9 +8,10 @@
   <title>Gap Map</title>
   <link rel="stylesheet" href="./public/css/app.css" />
   <link href="./favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
 </head>
 
-<body>
+<body class="main-body">
   <div class="tooltip">
     <div class="tooltip-header">
 
@@ -68,6 +69,9 @@
             <br>
             <input type="button" id="downloadLink" value="Export as PNG">
             <a id="d" class="hide" download>Download</a>
+            <br>
+            
+            <input type="button" id="downloadPdf" value="Export as PDF">
           </div>
         </div>
       </div>
@@ -105,7 +109,6 @@
               </tr>
             </thead>
             <tbody id="map_body">
-
             </tbody>
           </table>
         </div>
@@ -115,7 +118,9 @@
         <div class="col-md-12">
           <div class="col-md-12">
             <div id="legend-holder" class="col-md-12">
-              <svg xmlns="http://www.w3.org/2000/svg" class="chart-container" width="100%" height="100">
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" class="chart-container" width="100%" height="100">
+              </svg> -->
+              <svg class="chart-container" width="1000px">  
               </svg>
             </div>
           </div>
