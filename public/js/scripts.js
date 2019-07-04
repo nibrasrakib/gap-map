@@ -79,7 +79,7 @@ $(function () {
       });
       return t;
     });
-    var r = $.unique(result).sort();
+    var r = [...new Set(result)].sort()//$.unique(result).sort();
     return r;
   };
 
@@ -109,14 +109,18 @@ $(function () {
 
   function filter() {
     d3.csv('data/link1.csv', function (l) {
+      
       var country = getColumnRows(l, 'country');
       var regionWHO = getColumnRows(l, 'region_who');
       var regionWB = getColumnRows(l, 'region_wb');
 
-      var year = $.unique(getColumnRows(l, 'year')).sort();
+      var year = [...new Set(getColumnRows(l, 'year'))];//$.unique(getColumnRows(l, 'year')).sort();
       var uCountry = reshapeElements(country);
       var uregionWHO = reshapeElements(regionWHO);
       var uregionWB = reshapeElements(regionWB);
+
+      
+      console.log(year, uCountry);
 
       var output = [{
         data: year,
